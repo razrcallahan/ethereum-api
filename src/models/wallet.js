@@ -1,16 +1,10 @@
 /**
  * Created by wasimqamar on 01/05/18.
  */
-class Wallet {
+export default class Wallet {
     constructor(publicAddr, privateKey) {
         this.publicAddress = publicAddr;
         this.privateKey = privateKey;
-
-        connect();
-    }
-
-    connect() {
-        //connect to ethereum network
     }
 
     getPublicAddress() {
@@ -25,9 +19,7 @@ class Wallet {
         return this.balance;
     }
 
-    createTransaction() {
+    createTransaction(desinationAddr) {
 
     }
 }
-
-export default Wallet;

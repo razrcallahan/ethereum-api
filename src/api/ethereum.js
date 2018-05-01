@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import transaction from '../models/transaction';
-import Wallet from '../models/wallet';
+import factory, {generateNew} from '../models/wallet-factory';
+import Accounts from 'web3-eth-accounts';
 
 export default ({ config, db }) => {
     let api = Router();
@@ -10,7 +11,8 @@ export default ({ config, db }) => {
     });
 
     api.get('/createWallet', function(req, res){
-        let wallet = Wallet.createWithKeys("my key", "my key");
+        web3.eth.accounts.create();
+        let wallet = generateNew();
         res.json({publicAddr: wallet.getPublicAddress(), pvtKey: wallet.getPrivateKey()});
     });
 

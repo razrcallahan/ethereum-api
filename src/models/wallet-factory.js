@@ -2,27 +2,31 @@
  * Created by wasimqamar on 01/05/18.
  */
 
-class WalletFactory {
-    static createWithPrivateKey(publicAddr, privateKey) {
-        let wallet = new Wallet();
-        wallet.publicAddress = publicAddr;
-        wallet.privateKey = privateKey;
+import Wallet from './wallet';
 
-        return wallet;
-    }
+export default {
 
-    static createWithPublicKey(publicAddr) {
-        let wallet = new Wallet();
-        wallet.publicAddress = publicAddr;
+}
 
-        return wallet;
-    }
+export function createWithPrivateKey(publicAddr, privateKey) {
+    let wallet = new Wallet();
+    wallet.publicAddress = publicAddr;
+    wallet.privateKey = privateKey;
 
-    static generateNew() {
-        let wallet = new Wallet();
-        wallet.publicAddress = "new public address";
-        wallet.privateKey = "new private key";
+    return wallet;
+}
 
-        return wallet;
-    }
+export function createWithPublicKey(publicAddr) {
+    let wallet = new Wallet();
+    wallet.publicAddress = publicAddr;
+
+    return wallet;
+}
+
+export function generateNew() {
+    let wallet = new Wallet();
+    wallet.publicAddress = "new public address";
+    wallet.privateKey = "new private key";
+
+    return wallet;
 }
