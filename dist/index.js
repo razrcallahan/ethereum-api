@@ -40,6 +40,10 @@ var _config = require('./config.json');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _web = require('web3');
+
+var _web2 = _interopRequireDefault(_web);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
@@ -56,6 +60,8 @@ app.use((0, _cors2.default)({
 app.use(_bodyParser2.default.json({
 	limit: _config2.default.bodyLimit
 }));
+
+global.web3 = new _web2.default(new _web2.default.providers.HttpProvider(_config2.default.web3Provider));
 
 // connect to db
 (0, _db2.default)(function (db) {

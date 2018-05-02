@@ -7,7 +7,8 @@ import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import config from './config.json';
-import ethAccounts from 'web3-eth-accounts';
+import Web3 from 'web3';
+
 
 let app = express();
 app.server = http.createServer(app);
@@ -24,7 +25,7 @@ app.use(bodyParser.json({
 	limit : config.bodyLimit
 }));
 
-app.use(ethAccounts(config.web3Provider));
+global.web3 = new Web3( new Web3.providers.HttpProvider(config.web3Provider) );
 
 // connect to db
 initializeDb( db => {

@@ -4,29 +4,26 @@
 
 import Wallet from './wallet';
 
-export default {
+export default class WalletFactory {
+    createWithPrivateKey(privateKey) {
+        let wallet = new Wallet();
+        wallet.privateKey = privateKey;
+        return wallet;
+    }
 
-}
+    createWithPublicKey(publicAddr) {
+        let wallet = new Wallet();
+        wallet.publicAddress = publicAddr;
 
-export function createWithPrivateKey(publicAddr, privateKey) {
-    let wallet = new Wallet();
-    wallet.publicAddress = publicAddr;
-    wallet.privateKey = privateKey;
+        return wallet;
+    }
 
-    return wallet;
-}
+    generateNew() {
+        let wallet = new Wallet();
+        wallet.publicAddress = "new public address";
+        wallet.privateKey = "new private key";
 
-export function createWithPublicKey(publicAddr) {
-    let wallet = new Wallet();
-    wallet.publicAddress = publicAddr;
+        return wallet;
+    }
 
-    return wallet;
-}
-
-export function generateNew() {
-    let wallet = new Wallet();
-    wallet.publicAddress = "new public address";
-    wallet.privateKey = "new private key";
-
-    return wallet;
 }
