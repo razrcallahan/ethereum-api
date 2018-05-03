@@ -5,25 +5,41 @@
 import Wallet from './wallet';
 
 export default class WalletFactory {
-    createWithPrivateKey(privateKey) {
-        let wallet = new Wallet();
-        wallet.privateKey = privateKey;
-        return wallet;
-    }
 
-    createWithPublicKey(publicAddr) {
+    createWithPrivateKey = (privateKey) => {
+        return new Promise((resolve, reject) => {
+            let wallet = new Wallet();
+
+            wallet.privateKey = privateKey;
+
+            wallet.getAccountByPrivateKey().then((account) => {
+
+                wallet.publicAddress = account.address;
+                resolve(wallet);
+
+            });
+
+        });
+    };
+
+    createWithPublicKey = (publicAddr) => {
         let wallet = new Wallet();
         wallet.publicAddress = publicAddr;
 
         return wallet;
-    }
+    };
 
-    generateNew() {
-        let wallet = new Wallet();
-        wallet.publicAddress = "new public address";
-        wallet.privateKey = "new private key";
+    generateNew = () => {
+        return new Promise((resolve, reject) => {
+            let ethWallet = web3.eth.accounts.create();
 
-        return wallet;
-    }
+            let wallet = new Wallet();
+            wallet.publicAddress = ethWallet.address;
+            wallet.privateKey = ethWallet.privateKey;
+
+            resolve(wallet);
+
+        });
+    };
 
 }

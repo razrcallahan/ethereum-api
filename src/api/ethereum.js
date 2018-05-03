@@ -10,8 +10,11 @@ export default ({ config, db }) => {
     });
 
     api.get('/createWallet', function(req, res){
-        let wallet = generateNew();
-        res.json({publicAddr: wallet.getPublicAddress(), pvtKey: wallet.getPrivateKey()});
+        let wallet = new WalletFactory()
+            .generateNew()
+            .then((wallet) => {
+                res.json({publicAddress: wallet.publicAddress, privateKey: wallet.privateKey});
+            });
     });
 
     api.get('/getBalance/:addr', function(req, res){
@@ -27,11 +30,25 @@ export default ({ config, db }) => {
     });
 
     api.post('/transaction', function(req, res){
-        let wallet = new WalletFactory().createWithPrivateKey("afa66611fcd87fe2939f2dbace769512f14e7147288577c6f6735bb8aa955ce7");
+        let wallet = new WalletFactory()
+            .createWithPrivateKey(req.body.privateKey)
+            .then((wallet) => {
+                let txPromise = wallet.createTransaction(
+                    req.body.destination,
+                    req.body.amount,
+                    21000,
+                    20
+                );
 
-        let hash = wallet.createTransaction("0xeF19E7Ec9eE90a0426c60E74aFCc504C02513E11",
-            "0.01", 21000, 20);
+                console.log(txPromise);
 
+
+                txPromise.then((txDetails) => {
+                    console.log("Transaction details: ");
+                    console.log(txDetails);
+                    res.json(txDetails);
+                });
+            });
     });
 
     return api;

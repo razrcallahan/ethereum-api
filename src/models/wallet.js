@@ -5,21 +5,29 @@ import EthereumTx from 'ethereumjs-tx';
 
 export default class Wallet {
     constructor(publicAddr, privateKey) {
-        this.publicAddress = publicAddr;
-        this.privateKey = privateKey;
+        this._publicAddress = publicAddr;
+        this._privateKey = privateKey;
 
     }
 
-    getPublicAddress() {
-        return this.publicAddress;
+    get publicAddress() {
+        return this._publicAddress;
     }
 
-    getPrivateKey() {
-        return this.privateKey;
+    set publicAddress(addr) {
+        this._publicAddress = addr;
     }
 
-    getBalance() {
-        let address = this.getPublicAddress();
+    get privateKey() {
+        return this._privateKey;
+    }
+
+    set privateKey(key) {
+        this._privateKey = key;
+    }
+
+    getBalance = () => {
+        let address = this.publicAddress;
         return new Promise(function(resolve, reject){
 
             let balance = web3.eth.getBalance(address);
@@ -35,8 +43,11 @@ export default class Wallet {
         });
     }
 
-    createTransaction(destinationAddr, amount, gasPrice, gasLimit) {
-        let sendTransaction = function(nonce) {
+    createTransaction = (destinationAddr, amount, gasPrice, gasLimit) => {
+        var that = this;
+        console.log("Starting transaction .. ");
+        return that.getTransactionCount().then((nonce) => {
+            console.log("Nonce .. " + nonce);
             let details = {
                 "to": destinationAddr,
                 "value": web3.utils.toHex( web3.utils.toBN(web3.utils.toWei(amount, 'ether')).toString() ),
@@ -44,24 +55,44 @@ export default class Wallet {
                 "gasPrice": gasLimit * 1000000000, // converts the gwei price to wei
                 "nonce": nonce,
                 "chainId": 4 // EIP 155 chainId - mainnet: 1, rinkeby: 4
-            }
+            };
 
+            var privateKey = new Buffer(that.privateKey, 'hex');
             const transaction = new EthereumTx(details);
-            var privateKey = new Buffer('afa66611fcd87fe2939f2dbace769512f14e7147288577c6f6735bb8aa955ce7', 'hex')
+
             transaction.sign(privateKey);
 
             let serializedTx = transaction.serialize();
-            web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-            .on('transactionHash', function(hash){
-                    console.log(hash);
-                });
-        }
 
-        let nonce = web3.eth.getTransactionCount("0x77A83849D1Ae0d56410fA102d0C26Cc06c559620")
-        nonce.then(function(value) {
-            sendTransaction(value);
-        }).catch(function(message){
+
+            console.log("Sending transaction to blockchain .. " + details);
+            return web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+
+        }).catch((message) => {
+
             console.log(message);
         });
     }
+
+    getTransactionCount = () => {
+        return web3.eth.getTransactionCount(this.publicAddress);
+    }
+
+    getAccountByPrivateKey = () => {
+        console.log("finding public key from private key ... ");
+        var that = this;
+        return new Promise((resolve, reject) => {
+            let account = web3.eth.accounts.privateKeyToAccount('0x' + that.privateKey);
+            if( account ) {
+                console.log("public key found  ... " + account.address);
+                resolve((account));
+            }
+            else
+                reject(() => {
+                    throw new Error("Unable to find the account for private key");
+                });
+        });
+    }
+
+
 }
