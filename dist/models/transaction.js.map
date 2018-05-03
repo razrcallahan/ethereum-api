@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/models/transaction.js"],"names":["transaction"],"mappings":";;;;;AAAA;;;AAGA,IAAMA,cAAc,EAApB;kBACeA,W","file":"transaction.js","sourcesContent":["/**\n * Created by wasimqamar on 01/05/18.\n */\nconst transaction = [];\nexport default transaction;\n"]}

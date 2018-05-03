@@ -30,7 +30,10 @@ export default ({ config, db }) => {
     });
 
     api.post('/transaction', function(req, res){
-        let wallet = new WalletFactory()
+        //todo: validate request parameters.
+
+
+        new WalletFactory()
             .createWithPrivateKey(req.body.privateKey)
             .then((wallet) => {
                 let txPromise = wallet.createTransaction(
@@ -39,9 +42,6 @@ export default ({ config, db }) => {
                     21000,
                     20
                 );
-
-                console.log(txPromise);
-
 
                 txPromise.then((txDetails) => {
                     console.log("Transaction details: ");
