@@ -2,6 +2,7 @@
  * Created by wasimqamar on 01/05/18.
  */
 import EthereumTx from 'ethereumjs-tx';
+import config from '.././config.json';
 
 export default class Wallet {
     constructor(publicAddr, privateKey) {
@@ -44,7 +45,7 @@ export default class Wallet {
     }
 
     createTransaction = (destinationAddr, amount, gasPrice, gasLimit) => {
-        var that = this;
+        let that = this;
         console.log("Starting transaction .. ");
         return that.getTransactionCount().then((nonce) => {
             console.log("Nonce .. " + nonce);
@@ -52,12 +53,12 @@ export default class Wallet {
                 "to": destinationAddr,
                 "value": web3.utils.toHex( web3.utils.toBN(web3.utils.toWei(amount, 'ether')).toString() ),
                 "gas": gasPrice,
-                "gasPrice": gasLimit * 1000000000, // converts the gwei price to wei
+                "gasPrice": gasLimit * config.toWei, // converts the gwei price to wei
                 "nonce": nonce,
                 "chainId": 4 // EIP 155 chainId - mainnet: 1, rinkeby: 4
             };
 
-            var privateKey = new Buffer(that.privateKey, 'hex');
+            let privateKey = new Buffer(that.privateKey, 'hex');
             const transaction = new EthereumTx(details);
 
             transaction.sign(privateKey);
@@ -80,7 +81,7 @@ export default class Wallet {
 
     getAccountByPrivateKey = () => {
         console.log("finding public key from private key ... ");
-        var that = this;
+        let that = this;
         return new Promise((resolve, reject) => {
             let account = web3.eth.accounts.privateKeyToAccount('0x' + that.privateKey);
             if( account ) {

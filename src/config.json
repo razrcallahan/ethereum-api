@@ -2,5 +2,6 @@
 	"port": 8080,
 	"bodyLimit": "100kb",
 	"corsHeaders": ["Link"],
-    "web3Provider": "https://rinkeby.infura.io"
+    "web3Provider": "https://rinkeby.infura.io",
+    "toWei": 1000000000
 }
